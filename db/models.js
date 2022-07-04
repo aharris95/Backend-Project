@@ -8,8 +8,7 @@ exports.fetchTopics = () => {
 }
 
 exports.fetchArticle = (id) => { 
-    id = parseInt(id)
-    if(!id) {
+    if(isNaN(id)) {
         return Promise.reject({
           status: 400,
           msg: `Incorrect data type`,

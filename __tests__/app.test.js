@@ -40,7 +40,7 @@ describe('GET /api/articles/:article_id', () => {
           });
         });
     });
-    test('status:404, responds with article not found', () => {
+    test('status:404, responds with article not found if id does not exist', () => {
         const ARTICLE_ID = 20;
         return request(app)
           .get(`/api/articles/${ARTICLE_ID}`)
@@ -49,13 +49,22 @@ describe('GET /api/articles/:article_id', () => {
             expect(msg).toBe(`No article found for article_id: ${ARTICLE_ID}`)
           });
       });
-      test('status:404, responds with incorrect data type', () => {
+      test('status:400, responds with incorrect data type', () => {
         const ARTICLE_ID = 'a';
         return request(app)
           .get(`/api/articles/${ARTICLE_ID}`)
           .expect(400)
           .then(({body: {msg}}) => {
             expect(msg).toBe(`Incorrect data type`)
+          });
+      });
+      test('status:404, responds with article not found if id equals 0', () => {
+        const ARTICLE_ID = 0;
+        return request(app)
+          .get(`/api/articles/${ARTICLE_ID}`)
+          .expect(404)
+          .then(({body: {msg}}) => {
+            expect(msg).toBe(`No article found for article_id: ${ARTICLE_ID}`)
           });
       });
   });
