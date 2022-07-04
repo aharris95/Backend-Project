@@ -48,7 +48,15 @@ describe('GET /api/articles/:article_id', () => {
           .then(({body: {msg}}) => {
             expect(msg).toBe(`No article found for article_id: ${ARTICLE_ID}`)
           });
-          
+      });
+      test('status:404, responds with incorrect data type', () => {
+        const ARTICLE_ID = 'a';
+        return request(app)
+          .get(`/api/articles/${ARTICLE_ID}`)
+          .expect(404)
+          .then(({body: {msg}}) => {
+            expect(msg).toBe(`Incorrect data type`)
+          });
       });
   });
 describe("Routes that don't exist", () => {

@@ -7,7 +7,14 @@ exports.fetchTopics = () => {
     });
 }
 
-exports.fetchArticle = (id) => {
+exports.fetchArticle = (id) => { 
+    id = parseInt(id)
+    if(!id) {
+        return Promise.reject({
+          status: 404,
+          msg: `Incorrect data type`,
+        });
+      }
     return db.query('SELECT * FROM articles WHERE article_id = $1;', [id]).then((result)=>{
         if (!result.rows[0]) {
             return Promise.reject({
