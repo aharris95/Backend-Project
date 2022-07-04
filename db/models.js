@@ -11,7 +11,7 @@ exports.fetchArticle = (id) => {
     id = parseInt(id)
     if(!id) {
         return Promise.reject({
-          status: 404,
+          status: 400,
           msg: `Incorrect data type`,
         });
       }

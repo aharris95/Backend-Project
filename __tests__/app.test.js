@@ -53,7 +53,7 @@ describe('GET /api/articles/:article_id', () => {
         const ARTICLE_ID = 'a';
         return request(app)
           .get(`/api/articles/${ARTICLE_ID}`)
-          .expect(404)
+          .expect(400)
           .then(({body: {msg}}) => {
             expect(msg).toBe(`Incorrect data type`)
           });
