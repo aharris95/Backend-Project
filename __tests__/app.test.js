@@ -13,22 +13,20 @@ beforeEach(() => {
   describe('NC-News',() => {
     describe('Get api/topics', () => {
       test('Responds with 200 and array of objects', () => {
-return request(app).get("/api/topics").expect(200).then(({body: {topics}}) => {
-topics.forEach((topic) => {
-  expect(topic).toHaveProperty("description")
-  expect(topic).toHaveProperty("slug")
-        })
+        return request(app).get("/api/topics").expect(200).then(({body: {topics}}) => {
+        expect(topics).toHaveLength(3);
+        topics.forEach((topic) => {
+             expect(topic).toHaveProperty("description")
+            expect(topic).toHaveProperty("slug")
+              })
+         })
     })
 })
-})
-})
-
-  describe('NC-News',() => {
-  describe('Bad path api/topics', () => {
+describe("Routes that don't exist", () => {
     test('Responds with 404 for invalid path', () => {
-return request(app).get("/api/topicz").expect(404).then(({body: {msg}}) => {
-expect(msg).toBe("Invalid path")
-})
-})
-})
+        return request(app).get("/api/topicz").expect(404).then(({body: {msg}}) => {
+            expect(msg).toBe("Invalid path")
+        })
+        })
+    })
 })
