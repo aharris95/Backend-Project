@@ -6,3 +6,10 @@ exports.getTopics = (req,res) => {
     })
 }
 
+exports.getArticle = (req,res,next) => {
+    const { article_id } = req.params;
+    models.fetchArticle(article_id).then((article)=>{
+        res.send({article});
+    }).catch(next)
+}
+
