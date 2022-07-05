@@ -3,6 +3,7 @@ const {articleData, commentData, topicData, userData}   = require('../db/data/te
 const db = require('../db/connection');
 const request = require('supertest');
 const app = require('../db/app.js');
+const sorted = require('jest-sorted');
 
 beforeEach(() => {
     return seed({articleData, commentData, topicData, userData});
@@ -130,7 +131,7 @@ beforeEach(() => {
             })
             })
       })
-      describe('Get api/users', () => {
+      describe('GET api/users', () => {
         test('Responds with 200 and array of objects', () => {
           return request(app).get("/api/users").expect(200).then(({body: {users}}) => {
           expect(users).toHaveLength(4);
@@ -142,7 +143,27 @@ beforeEach(() => {
            })
         })
       })
- })
+describe('GET api/articles', () => {
+test('Responds with 200 and array of objects', () => {
+    return request(app).get("/api/articles").expect(200).then(({body: {articles}}) => {
+    expect(articles).toHaveLength(12);
+    articles.forEach((article) => {
+            expect(article).toHaveProperty("author")
+            expect(article).toHaveProperty("title")
+            expect(article).toHaveProperty("article_id")
+            expect(article).toHaveProperty("topic")
+            expect(article).toHaveProperty("created_at")
+            expect(article).toHaveProperty("votes")
+            expect(article).toHaveProperty("comment_count")
+            })
+        })
+    })
+    test('Responds with 200 and should be sorted by date in descending order as a default', ()=>{
+        return request(app).get("/api/articles").expect(200).then(({body: {articles}})=>{
+            expect(articles).toBeSortedBy('created_at', { descending: true, coerce: true})
+        })
+    })
+})
 describe("Routes that don't exist", () => {
     test('Responds with 404 for invalid path', () => {
         return request(app).get("/api/topicz").expect(404).then(({body: {msg}}) => {
@@ -151,4 +172,4 @@ describe("Routes that don't exist", () => {
         })
     })
 })
-
+})
