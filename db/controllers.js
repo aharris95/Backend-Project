@@ -23,7 +23,12 @@ exports.patchArticleById = (req, res, next) => {
 
   exports.getUsers = (req,res) => {
     models.fetchUsers().then((users)=>{
-        console.log(users)
         res.send({users});
+    })
+}
+
+exports.getArticles = (req,res) => {
+    models.fetchArticles().then((articles)=>{
+        res.send({articles});
     })
 }
