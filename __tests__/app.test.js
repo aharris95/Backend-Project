@@ -179,10 +179,10 @@ describe('GET api/articles/:article_id/comments', () => {
                 })
             })
     })
-    test('Responds with 200 and message if no comments on an article', () => {
+    test('Responds with 200 and empty array if no comments on an article', () => {
         const ARTICLE_ID = 2;
-        return request(app).get(`/api/articles/${ARTICLE_ID}/comments`).expect(200).then(({body: {msg}}) => {
-            expect(msg).toBe(`No comments for article ${ARTICLE_ID}`)
+        return request(app).get(`/api/articles/${ARTICLE_ID}/comments`).expect(200).then(({body: {comments}}) => {
+            expect(comments).toEqual([])
             })
     })
         test('status:404, responds with article not found if id does not exist', () => {

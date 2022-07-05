@@ -74,10 +74,9 @@ exports.fetchCommentsById = (id) => {
         if (!comments.rows[0]) {
             return db.query(`SELECT articles.article_id FROM articles`).then((article_id)=>{
             if(article_id.rows.find(({ article_id }) => article_id == id)){
-            return ([{
-              status: 200,
-              msg: `No comments for article ${id}`,
-            }]);
+            return ([
+              
+            ]);
         } else{
             return Promise.reject({
                 status: 404,

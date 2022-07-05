@@ -36,10 +36,6 @@ exports.getArticles = (req,res) => {
 exports.getCommentsByArticleId = (req, res, next) => {
     const { article_id } = req.params;
     models.fetchCommentsById(article_id).then((comments)=>{
-    if(comments[0].msg){
-        res.send({msg: comments[0].msg})
-    } else{
-     res.send({comments}) 
-    }
+        res.send({comments})
     }).catch(next)
   };
