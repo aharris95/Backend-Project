@@ -129,6 +129,18 @@ beforeEach(() => {
             })
             })
       })
+      describe('Get api/users', () => {
+        test('Responds with 200 and array of objects', () => {
+          return request(app).get("/api/users").expect(200).then(({body: {users}}) => {
+          expect(users).toHaveLength(4);
+          users.forEach((user) => {
+               expect(user).toHaveProperty("username")
+               expect(user).toHaveProperty("name")
+               expect(user).toHaveProperty("avatar_url")
+                })
+           })
+        })
+      })
  })
 describe("Routes that don't exist", () => {
     test('Responds with 404 for invalid path', () => {

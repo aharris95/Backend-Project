@@ -21,3 +21,9 @@ exports.patchArticleById = (req, res, next) => {
     }).catch(next)
   };
 
+  exports.getUsers = (req,res) => {
+    models.fetchUsers().then((users)=>{
+        console.log(users)
+        res.send({users});
+    })
+}
