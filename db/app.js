@@ -9,6 +9,7 @@ app.get('/api/topics', controllers.getTopics);
 app.get('/api/articles/:article_id', controllers.getArticle)
 app.get('/api/users', controllers.getUsers)
 app.get('/api/articles', controllers.getArticles)
+app.get('/api/articles/:article_id/comments', controllers.getCommentsByArticleId)
 
 app.patch('/api/articles/:article_id', controllers.patchArticleById)
 

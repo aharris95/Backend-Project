@@ -164,6 +164,56 @@ test('Responds with 200 and array of objects', () => {
         })
     })
 })
+})
+describe('GET api/articles/:article_id/comments', () => {
+    test('Responds with 200 and array of objects', () => {
+        const ARTICLE_ID = 1;
+        return request(app).get(`/api/articles/${ARTICLE_ID}/comments`).expect(200).then(({body: {comments}}) => {
+        expect(comments).toHaveLength(11);
+        comments.forEach((comment) => {
+                expect(comment).toHaveProperty("comment_id")
+                expect(comment).toHaveProperty("votes")
+                expect(comment).toHaveProperty("created_at")
+                expect(comment).toHaveProperty("author")
+                expect(comment).toHaveProperty("body")
+                })
+            })
+    })
+    test('Responds with 200 and message if no comments on an article', () => {
+        const ARTICLE_ID = 2;
+        return request(app).get(`/api/articles/${ARTICLE_ID}/comments`).expect(200).then(({body: {msg}}) => {
+            expect(msg).toBe(`No comments for article ${ARTICLE_ID}`)
+            })
+    })
+        test('status:404, responds with article not found if id does not exist', () => {
+            const ARTICLE_ID = 20;
+            return request(app)
+                .get(`/api/articles/${ARTICLE_ID}/comments`)
+                .expect(404)
+                .then(({body: {msg}}) => {
+                expect(msg).toBe(`No article found for article_id: ${ARTICLE_ID}`)
+                });
+            });
+            test('status:400, responds with incorrect data type', () => {
+            const ARTICLE_ID = 'a';
+            return request(app)
+                .get(`/api/articles/${ARTICLE_ID}/comments`)
+                .expect(400)
+                .then(({body: {msg}}) => {
+                expect(msg).toBe(`Incorrect data type`)
+                });
+            });
+            test('status:404, responds with article not found if id equals 0', () => {
+            const ARTICLE_ID = 0;
+            return request(app)
+                .get(`/api/articles/${ARTICLE_ID}/comments`)
+                .expect(404)
+                .then(({body: {msg}}) => {
+                expect(msg).toBe(`No article found for article_id: ${ARTICLE_ID}`)
+                });
+            });
+          
+    
 describe("Routes that don't exist", () => {
     test('Responds with 404 for invalid path', () => {
         return request(app).get("/api/topicz").expect(404).then(({body: {msg}}) => {
