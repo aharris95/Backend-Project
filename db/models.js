@@ -14,7 +14,10 @@ exports.fetchArticle = (id) => {
           msg: `Incorrect data type`,
         });
       }
-      return db.query('SELECT * FROM articles WHERE article_id = $1;', [id]).then((result)=>{
+      return db.query(`SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles
+      LEFT JOIN comments ON comments.article_id = articles.article_id
+      WHERE articles.article_id = $1
+      GROUP BY articles.article_id;`, [id]).then((result)=>{
         if (!result.rows[0]) {
             return Promise.reject({
               status: 404,
