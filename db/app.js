@@ -6,6 +6,7 @@ const app = express();
 app.use(express.json());
 
 app.get('/api/topics', controllers.getTopics);
+app.get('/api/articles/:article_id', controllers.getArticle)
 
 app.patch('/api/articles/:article_id', controllers.patchArticleById)
 
@@ -16,6 +17,8 @@ app.use('*', (req, res) =>{
   app.use((err, req, res, next) => {
     if (err.status && err.msg) {
       res.status(err.status).send({ msg: err.msg });
+    } else {
+      next(err)
     }
   })
   
