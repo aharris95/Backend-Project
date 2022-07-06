@@ -88,3 +88,20 @@ exports.fetchCommentsById = (id) => {
         return comments.rows;
     });
 }
+
+exports.insertComment = (id, body, author) => {
+  if(isNaN(id)) {
+    return Promise.reject({
+      status: 400,
+      msg: `Incorrect data type`,
+    });
+  } else if(!body || !author) {
+    return Promise.reject({
+      status: 400,
+      msg: `Post body incorrect`,
+    });
+  } 
+  return db.query('INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *;',[body, author, id]).then(({ rows }) => {
+    return rows[0]
+  });
+};

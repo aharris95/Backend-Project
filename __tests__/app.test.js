@@ -21,7 +21,7 @@ beforeEach(() => {
             expect(topic).toHaveProperty("slug")
               })
          })
-    })
+})
     describe('GET /api/articles/:article_id', () => {
         test('status:200, responds with a single matching article', () => {
           const ARTICLE_ID = 2;
@@ -212,8 +212,61 @@ describe('GET api/articles/:article_id/comments', () => {
                 expect(msg).toBe(`No article found for article_id: ${ARTICLE_ID}`)
                 });
             });
-          
-    
+describe('POST /api/articles/:article_id/comments', () => {
+    test('status:201, responds with newly posted comment', () => {
+        const ARTICLE_ID = 1;
+        const newComment = {
+        body: "New comment",
+        author: "butter_bridge",
+        };
+        return request(app)
+        .post(`/api/articles/${ARTICLE_ID}/comments`)
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+            expect(typeof body.comment.created_at).toBe('string')
+            expect(body.comment).toEqual({
+            ...newComment,
+            article_id: ARTICLE_ID,
+            votes: 0,
+            created_at: body.comment.created_at,
+            comment_id: 19,
+            });
+        });
+    });
+    test('status:201, checks that the new comment has been added to the database', () => {
+            const ARTICLE_ID = 1;
+            const newComment = {
+            body: "New comment",
+            author: "butter_bridge",
+            };
+            return request(app)
+            .post(`/api/articles/${ARTICLE_ID}/comments`)
+            .send(newComment)
+            .expect(201)
+            .then(()=>{
+                return request(app).get(`/api/articles/${ARTICLE_ID}/comments`).then((comments)=>{
+                    const result = comments.body.comments.filter(element => element.comment_id === 19);
+                     expect(result.length).toBe(1);   
+               })
+            })
+        })
+        test('Returns a 400 when bad post body',() => {
+            const ARTICLE_ID = 1;
+            return request(app).post(`/api/articles/${ARTICLE_ID}/comments`).send({'some':'object'}).expect(400).then(({body: {msg}}) => {
+                expect(msg).toBe("Post body incorrect")
+            });
+        });
+            test('status:400, responds with incorrect data type', () => {
+            const ARTICLE_ID = 'a';
+            return request(app)
+                .post(`/api/articles/${ARTICLE_ID}/comments`)
+                .expect(400)
+                .then(({body: {msg}}) => {
+                expect(msg).toBe(`Incorrect data type`)
+                });
+            });
+    });           
 describe("Routes that don't exist", () => {
     test('Responds with 404 for invalid path', () => {
         return request(app).get("/api/topicz").expect(404).then(({body: {msg}}) => {
