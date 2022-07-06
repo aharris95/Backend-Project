@@ -224,7 +224,6 @@ describe('POST /api/articles/:article_id/comments', () => {
         .send(newComment)
         .expect(201)
         .then(({ body }) => {
-            expect(typeof body.comment.created_at).toBe('string')
             expect(body.comment).toEqual({
             ...newComment,
             article_id: ARTICLE_ID,
@@ -257,6 +256,20 @@ describe('POST /api/articles/:article_id/comments', () => {
                 expect(msg).toBe("Post body incorrect")
             });
         });
+        test('status:404, responds with article not found if id does not exist', () => {
+            const ARTICLE_ID = 20;
+            const newComment = {
+                body: "New comment 2",
+                author: "butter_bridge",
+                };
+            return request(app)
+                .post(`/api/articles/${ARTICLE_ID}/comments`)
+                .send(newComment)
+                .expect(404)
+                .then(({body: {msg}}) => {
+                expect(msg).toBe(`No article found for article_id: ${ARTICLE_ID}`)
+                });
+            });
             test('status:400, responds with incorrect data type', () => {
             const ARTICLE_ID = 'a';
             return request(app)

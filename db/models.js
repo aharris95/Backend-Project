@@ -101,7 +101,18 @@ exports.insertComment = (id, body, author) => {
       msg: `Post body incorrect`,
     });
   } 
-  return db.query('INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *;',[body, author, id]).then(({ rows }) => {
-    return rows[0]
-  });
-};
+return db.query(`SELECT articles.article_id FROM articles`).then((article_id)=>{
+  if(id > article_id.rows.length){
+    console.log(id)
+    return Promise.reject({
+      status: 404,
+      msg: `No article found for article_id: ${id}`,
+    });
+  } else {
+    return db.query('INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *;',[body, author, id]).then(({ rows }) => {
+      return rows[0]
+        })
+    }
+})
+}
+
