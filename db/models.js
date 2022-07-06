@@ -102,8 +102,8 @@ exports.insertComment = (id, body, author) => {
     });
   } 
 return db.query(`SELECT articles.article_id FROM articles`).then((article_id)=>{
-  if(id > article_id.rows.length){
-    console.log(id)
+  const idExists = article_id.rows.filter(element => element.article_id == id)
+  if(!idExists[0]){
     return Promise.reject({
       status: 404,
       msg: `No article found for article_id: ${id}`,
