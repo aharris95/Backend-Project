@@ -88,3 +88,31 @@ exports.fetchCommentsById = (id) => {
         return comments.rows;
     });
 }
+
+exports.insertComment = (id, body, author) => {
+  if(isNaN(id)) {
+    return Promise.reject({
+      status: 400,
+      msg: `Incorrect data type`,
+    });
+  } else if(!body || !author) {
+    return Promise.reject({
+      status: 400,
+      msg: `Post body incorrect`,
+    });
+  } 
+return db.query(`SELECT articles.article_id FROM articles WHERE article_id = ${id}`).then((article_id)=>{
+  if(!article_id.rows.length){
+    return Promise.reject({
+      status: 404,
+      msg: `No article found for article_id: ${id}`,
+     })
+  }
+  if(article_id.rows[0].article_id == id){
+    return db.query('INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *;',[body, author, id]).then(({ rows }) => {
+      return rows[0]
+    })
+}
+  })
+}
+  
