@@ -18,6 +18,13 @@ beforeEach(() => {
 afterAll(() => db.end());
 
 describe("NC-News", () => {
+    describe("Get api/", () => {
+        test("Responds with 200", () => {
+            return request(app)
+              .get("/api")
+              .expect(200)
+        })  
+    })
   describe("Get api/topics", () => {
     test("Responds with 200 and array of objects", () => {
       return request(app)
@@ -371,10 +378,6 @@ describe("NC-News", () => {
           });
       });
       describe('DELETE /api/comments/:comment_id',() => {
-        test('returns a 204 status code',() => {
-            const COMMENT_ID = 1
-           return request(app).delete(`/api/comments/${COMMENT_ID}`).expect(204)
-        });
         test('return 204 and check that the comment has been deleted from the database', ()=>{
             const COMMENT_ID = 1
             return request(app).delete(`/api/comments/${COMMENT_ID}`).expect(204).then(()=>{
