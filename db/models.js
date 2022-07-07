@@ -88,6 +88,7 @@ exports.fetchArticles = (sort_by = "created_at", order = "DESC", filter) => {
         return articles.rows;
       });
     }
+    return Promise.reject({status: 404, msg: 'Key does not exist'})
   })
 };
 

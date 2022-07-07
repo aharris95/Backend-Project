@@ -231,6 +231,14 @@ describe("NC-News", () => {
             expect(msg).toBe(`Key does not exist`);
           });
       });
+      test("status:404, responds with incorrect query if query does not exist", () => {
+        return request(app)
+          .get(`/api/articles?sort_by=dogs`)
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe(`Key does not exist`);
+          });
+      });
     });
   });
   describe("GET api/articles/:article_id/comments", () => {
