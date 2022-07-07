@@ -5,6 +5,7 @@ const app = express();
 
 app.use(express.json());
 
+app.get("/api", controllers.getApi)
 app.get("/api/topics", controllers.getTopics);
 app.get("/api/articles/:article_id", controllers.getArticle);
 app.get("/api/users", controllers.getUsers);
@@ -17,6 +18,8 @@ app.get(
 app.post("/api/articles/:article_id/comments", controllers.postComment);
 
 app.patch("/api/articles/:article_id", controllers.patchArticleById);
+
+app.delete('/api/comments/:comment_id', controllers.deleteCommentById)
 
 app.use("*", (req, res) => {
   res.status(404).send({ msg: "Invalid path" });

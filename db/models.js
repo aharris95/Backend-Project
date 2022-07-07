@@ -1,10 +1,4 @@
 const db = require("./connection.js");
-const {
-  articleData,
-  commentData,
-  topicData,
-  userData,
-} = require("../db/data/test-data");
 
 exports.fetchTopics = () => {
   return db.query("SELECT * FROM topics;").then((topics) => {
@@ -159,3 +153,28 @@ exports.insertComment = (id, body, author) => {
       }
     });
 };
+
+exports.deleteComment = (id) => {
+  if (isNaN(+id)) {
+    return Promise.reject({
+      status: 400,
+      msg: `Incorrect data type`,
+    });
+  }
+
+  return db.query("SELECT * FROM comments;").then((comments) => {
+    const matchedId = comments.rows.filter(comment => comment.comment_id === +id)
+    if(matchedId.length === 0){
+      return Promise.reject({
+        status: 404,
+        msg: `No comment found for comment_id: ${id}`,
+      });
+    }
+  return db.query(
+    `DELETE FROM comments 
+     WHERE comment_id = $1;`, [id]  
+  ) 
+  });
+}
+
+

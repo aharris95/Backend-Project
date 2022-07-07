@@ -1,4 +1,10 @@
 const models = require("./models");
+const endpoints = require("../endpoints.json")
+
+exports.getApi = (req, res) =>{
+    res.send({endpoints})
+
+}
 
 exports.getTopics = (req, res) => {
   models.fetchTopics().then((topics) => {
@@ -60,3 +66,10 @@ exports.postComment = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.deleteCommentById = (req, res, next) => {
+    const { comment_id } = req.params
+    models.deleteComment(comment_id).then(()=>{
+        res.status(204).send()
+    }).catch(next);
+}
