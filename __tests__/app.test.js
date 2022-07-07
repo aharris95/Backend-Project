@@ -9,6 +9,7 @@ const db = require("../db/connection");
 const request = require("supertest");
 const app = require("../db/app.js");
 const sorted = require("jest-sorted");
+const e = require("express");
 
 beforeEach(() => {
   return seed({ articleData, commentData, topicData, userData });
@@ -369,6 +370,40 @@ describe("NC-News", () => {
             expect(msg).toBe(`Incorrect data type`);
           });
       });
+      describe('DELETE /api/comments/:comment_id',() => {
+        test('returns a 204 status code',() => {
+            const COMMENT_ID = 1
+           return request(app).delete(`/api/comments/${COMMENT_ID}`).expect(204)
+        });
+        test('return 204 and check that the comment has been deleted from the database', ()=>{
+            const COMMENT_ID = 1
+            return request(app).delete(`/api/comments/${COMMENT_ID}`).expect(204).then(()=>{
+                db.query('SELECT * FROM comments').then((data)=>{
+                    expect(data.rows.some((element)=>{
+                    element.comment_id === COMMENT_ID
+                    })).toBe(false)
+                })
+            })
+        })
+        test("status:404, responds with article not found if id does not exist", () => {
+            const COMMENT_ID = 50;
+            return request(app)
+              .delete(`/api/comments/${COMMENT_ID}`)
+              .expect(404)
+              .then(({ body: { msg } }) => {
+                expect(msg).toBe(`No comment found for comment_id: ${COMMENT_ID}`);
+              });
+          });
+          test("status:400, responds with incorrect data type", () => {
+            const COMMENT_ID = "a";
+            return request(app)
+              .delete(`/api/comments/${COMMENT_ID}`)
+              .expect(400)
+              .then(({ body: { msg } }) => {
+                expect(msg).toBe(`Incorrect data type`);
+              });
+          });
+    });
     });
     describe("Routes that don't exist", () => {
       test("Responds with 404 for invalid path", () => {
