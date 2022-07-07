@@ -67,29 +67,28 @@ exports.fetchUsers = () => {
 };
 
 exports.fetchArticles = (sort_by = "created_at", order = "DESC", filter) => {
-  if (filter) {
+  const sqlFilter = []
+  return db.query("SELECT * FROM articles;").then((articles) => {
+    const matchedArticles = articles.rows.filter(article => article.topic === filter)
+    if (filter && matchedArticles.length >= 1){
+      sqlFilter.push(`WHERE articles.topic =  '${String(filter)}'`)
+    } else if (filter && matchedArticles.length === 0){
+      return Promise.reject({status: 404, msg: 'Key does not exist'})
+    }
+  if (articles.rows[0].hasOwnProperty(sort_by)) {
     return db
       .query(
         `SELECT articles.*, COUNT(comments.article_id)::INT AS comment_count FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    WHERE articles.topic = '${String(filter)}'
-    GROUP BY articles.article_id
-    ORDER BY articles.${sort_by} ${order}`
+          LEFT JOIN comments ON comments.article_id = articles.article_id
+          ${sqlFilter}
+          GROUP BY articles.article_id
+          ORDER BY articles.${sort_by} ${order}`
       )
       .then((articles) => {
         return articles.rows;
       });
-  }
-  return db
-    .query(
-      `SELECT articles.*, COUNT(comments.article_id)::INT AS comment_count FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.${sort_by} ${order}`
-    )
-    .then((articles) => {
-      return articles.rows;
-    });
+    }
+  })
 };
 
 exports.fetchCommentsById = (id) => {

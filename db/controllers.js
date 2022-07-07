@@ -33,11 +33,11 @@ exports.getUsers = (req, res) => {
   });
 };
 
-exports.getArticles = (req, res) => {
+exports.getArticles = (req, res, next) => {
   const { sort_by, order, filter } = req.query;
   models.fetchArticles(sort_by, order, filter).then((articles) => {
     res.send({ articles });
-  });
+  }).catch(next);
 };
 
 exports.getCommentsByArticleId = (req, res, next) => {
