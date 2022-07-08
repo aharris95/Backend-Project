@@ -27,13 +27,11 @@ npm test
 
 ## Seeding
 
-There is a file in the `db` folder for seeding both a dev and a test database. You can run these directly with `psql` and for the dev database we have provided the following script in your package.json: `npm run seed`
+There is a file in the `db` folder for seeding both a dev and a test database. You can run these directly with `psql` and for the dev database I have provided the following script in the package.json: `npm run seed`
 
 ## Creating the connection to the separate `test` and `development` databases
 
-Your first task is to create your connection to the database using `node-postgres`.
-
-You will need to use `dotenv` files (`.env.test` & `.env.development`) to determine which database to connect to, based on whether you are running your `jest` tests, or running the server manually.
+You will need to use `dotenv` files (`.env.test` & `.env.development`) to determine which database to connect to, based on whether you are running the `jest` tests, or running the server manually.
 
 > _`dotenv` is a [module that loads environment variables from a `.env` file into the `process.env` global object](https://github.com/motdotla/dotenv#readme)_
 
